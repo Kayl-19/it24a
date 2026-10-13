@@ -1,39 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Maps</title>
 
-    <!-- Leaflet CSS (Fixed 'stylesheet' typo) -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" 
-          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" 
-          crossorigin=""/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 
     <style>
         #map {
             height: 500px;
+            width: 100%;
+        }
+        .popup-img {
+            max-width: 100%;
+            height: auto;
+            margin-top: 8px;
+            border-radius: 4px;
         }
     </style>
 </head>
+
 <body>
     <h1>Simple Map</h1>
     <div id="map"></div>
 
-    <!-- Added missing Leaflet JS SDK -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" 
-            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" 
-            crossorigin=""></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
     <script>
-        // Initialize map centered at coordinates [lat, lng]
-        const map = L.map('map').setView([8.360, 124.868], 17);
+        const mapData = [
+            {
+                "name": "Student Welfare and Development Center",
+                "title": "SWDC",
+                "lat": 8.35987,
+                "lng": 124.86792
+            },
+            {
+                "name": "NBSC Covered Court",
+                "title": "NBSC CC",
+                "lat": 8.359992,
+                "lng": 124.868861, /* Fixed: Added missing comma here */
+                "img": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdDl2Znk5emdkcWNhZW4xdTlsOGkzenM5ZWVmdDRrbW1yaG1iOHNkZCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/iDqCznoUNm5AXtEfR0/giphy.gif"
+            }
+        ];
 
-        // Load and display map tiles from OpenStreetMap
-        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-        }).addTo(map);
+        function initMap() {
+            const map = L.map('map').setView([8.360, 124.868], 18);
+
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            }).addTo(map);
+
+            mapData.forEach(pin => {
+                const marker = L.marker([pin.lat, pin.lng]).addTo(map);
+                
+                // Build popup content (Text + optional Image)
+                let popupContent = `<b>${pin.title || pin.name}</b>`;
+                if (pin.img) {
+                    popupContent += `<br><img src="${pin.img}" alt="${pin.name}" class="popup-img">`;
+                }
+
+                marker.bindPopup(popupContent);
+            });
+        }
+
+        initMap();
     </script>
 </body>
+
 </html>
